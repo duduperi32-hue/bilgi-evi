@@ -795,14 +795,19 @@ function goToDashboard() {
   // Bu kullanıcıyı lig için kaydet
   const existing = state.registeredUsers.find(u => u.email === state.profile.email);
   if (!existing) {
-    state.registeredUsers.push({
+    const newUser = {
       name: state.profile.name || 'Öğrenci',
       initials: state.profile.initials,
       email: state.profile.email,
       grade: state.currentClass,
       points: 0,
       badge: BADGES[0],
-    });
+    };
+    state.registeredUsers.push(newUser);
+    if (typeof FirebaseDB !== 'undefined') FirebaseDB.saveUser(newUser);
+  } else {
+    existing.grade = state.currentClass;
+    if (typeof FirebaseDB !== 'undefined') FirebaseDB.saveUser(existing);
   }
   document.getElementById('screen-login').classList.remove('active');
   document.getElementById('screen-login').classList.add('hidden');
@@ -974,7 +979,11 @@ function saveProfile() {
   document.getElementById('dash-name').textContent = state.profile.name.split(' ')[0];
   // Kayıtlı kullanıcı bilgilerini güncelle
   const u = state.registeredUsers.find(u => u.email === state.profile.email);
-  if (u) { u.name = state.profile.name; u.initials = state.profile.initials; }
+  if (u) { 
+    u.name = state.profile.name; 
+    u.initials = state.profile.initials; 
+    if (typeof FirebaseDB !== 'undefined') FirebaseDB.saveUser(u);
+  }
   showToast('Profil kaydedildi! ✅');
 }
 
@@ -1506,7 +1515,10 @@ function submitTest() {
 
 function addPoints(pts) {
   const u = state.registeredUsers.find(u => u.email === state.profile.email);
-  if (u) u.points += pts;
+  if (u) {
+    u.points += pts;
+    if (typeof FirebaseDB !== 'undefined') FirebaseDB.saveUser(u);
+  }
 }
 
 function renderReview() {
@@ -1718,4 +1730,23 @@ function quitGame() { state.gameActive = false; document.getElementById('game-pl
 // ─────────────────────────────────────────
 // BAŞLANGIÇ
 // ─────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => { initLogin(); });
+document.addEventListener('DOMContentLoaded', () => { 
+  if (typeof FirebaseDB !== 'undefined') {
+    FirebaseDB.listenUsers((users) => {
+      // Firebase'den güncel lig verilerini al
+      state.registeredUsers = users;
+      
+      // Hangi ekranda isek orayı güncelle
+      if (!document.getElementById('screen-login').classList.contains('hidden')) {
+        renderLeagueMiniLogin();
+      }
+      if (state.currentNav === 'league') {
+        renderLeagueBoard();
+      }
+      if (state.currentNav === 'profile') {
+        renderVirtualClass();
+      }
+    });
+  }
+  initLogin(); 
+});
