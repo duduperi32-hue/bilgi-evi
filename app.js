@@ -652,13 +652,13 @@ const VIDEO_DB = {
 const VOCATIONAL = {
   anadolu:  { label:'Anadolu Lisesi',           kulturDersleri:['Matematik','Fizik','Kimya','Biyoloji','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü','Felsefe'], meslekDersleri:[] },
   fen:      { label:'Fen Lisesi',                kulturDersleri:['Matematik','Fizik','Kimya','Biyoloji','Türk Dili','İngilizce','Tarih','Coğrafya','Bilgisayar'], meslekDersleri:[] },
-  elektrik: { label:'Elektrik-Elektronik',       kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Elektrik Devre Analizi','Elektronik','Elektrik Tesisatı','PLC Programlama','Otomasyon'] },
+  elektrik: { label:'Elektrik-Elektronik',       kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Mesleki Gelişim Atölyesi','Temel Elektrik-Elektronik Atölyesi','Elektrik-Elektronik Esasları','Bilgisayarla Devre Dizaynı'] },
   bilisim:  { label:'Bilişim Teknolojileri',     kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Bilişim Teknolojilerinin Temelleri','Bilgisayarlı Tasarım Uygulamaları','Programlama Temelleri','Mesleki Gelişim Atölyesi'] },
-  makine:   { label:'Makine Teknolojisi',        kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Teknik Resim','CNC Tezgahları','Hidrolik & Pnömatik','Malzeme Bilgisi','Kaynak Teknolojisi'] },
-  insaat:   { label:'İnşaat Teknolojisi',        kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Yapı Bilgisi','Statik','Mimari Çizim','Zemin Mekaniği','İnşaat Uygulamaları'] },
-  saglik:   { label:'Sağlık Hizmetleri',         kulturDersleri:['Matematik','Biyoloji','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Anatomi','Fizyoloji','Hasta Bakımı','Tıbbi Terminoloji','İlk Yardım'] },
-  mutfak:   { label:'Aşçılık & Gastronomi',      kulturDersleri:['Matematik','Biyoloji','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Mutfak Tekniği','Pastane Ürünleri','Beslenme Bilimi','Mutfak Yönetimi','Dünya Mutfakları'] },
-  muhasebe: { label:'Muhasebe & Finans',         kulturDersleri:['Matematik','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Muhasebe Temelleri','Bilanço','Vergi Hukuku','Girişimcilik','Ekonomi'] },
+  makine:   { label:'Makine Teknolojisi',        kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Mesleki Gelişim Atölyesi','Makine Meslek Resmi','Temel İmalat İşlemleri','Bilgisayar Destekli Çizim'] },
+  insaat:   { label:'İnşaat Teknolojisi',        kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Mesleki Gelişim Atölyesi','Mesleki Çizim','Temel İnşaat Teknolojisi','Yapı Elemanları'] },
+  saglik:   { label:'Sağlık Hizmetleri',         kulturDersleri:['Matematik','Biyoloji','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Mesleki Gelişim Atölyesi','Anatomi ve Fizyoloji','Mesleki Hak ve Sorumluluklar','Temel Mesleki Uygulamalar'] },
+  mutfak:   { label:'Yiyecek İçecek Hizmetleri', kulturDersleri:['Matematik','Biyoloji','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Mesleki Gelişim Atölyesi','Beslenme İlkeleri ve Hijyen','Temel Yiyecek Üretimi','Servis Hazırlıkları'] },
+  muhasebe: { label:'Muhasebe & Finansman',      kulturDersleri:['Matematik','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Mesleki Gelişim Atölyesi','Mesleki Matematik','Ofis Uygulamaları','Temel Muhasebe'] },
 };
 
 const FOUNDATION_GRADES = [
