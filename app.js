@@ -1456,6 +1456,11 @@ function renderQuestions() {
 }
 
 function selectAnswer(qi, oi) {
+  if (userAnswers[qi] === oi) {
+    userAnswers[qi] = -1;
+    document.getElementById(`opt-${qi}-${oi}`).classList.remove('selected');
+    return;
+  }
   userAnswers[qi] = oi;
   document.querySelectorAll(`#qcard-${qi} .option-btn`).forEach(b => b.classList.remove('selected'));
   document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
