@@ -793,6 +793,8 @@ function renderLeagueMiniLogin() {
       <span class="mini-name">${u.name}</span>
       <span class="mini-pts">${u.points.toLocaleString('tr-TR')} pt</span>
     </div>`).join('');
+}
+
 function goToDashboard() {
   const emailVal = document.getElementById('login-email').value.trim();
   const passVal = document.getElementById('login-password').value.trim();
