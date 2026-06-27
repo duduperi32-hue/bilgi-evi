@@ -1243,33 +1243,33 @@ async function selectTopic(topic, subjectName) {
   const vmTitle = document.getElementById('vm-title');
   const vmCh = document.getElementById('vm-channel');
 
+  const fallbackDiv = document.getElementById('video-fallback');
+  const fallbackLink = document.getElementById('youtube-fallback-link');
+
   if (staticVid) {
     iframe.src = `https://www.youtube.com/embed/${staticVid.id}?rel=0`;
+    iframe.style.display = 'block';
+    fallbackDiv.classList.add('hidden');
     vmTitle.textContent = staticVid.title;
     vmCh.textContent = '📺 ' + staticVid.ch;
   } else {
     // Gemini ile en iyi YouTube sorgusu oluştur
-    vmTitle.textContent = '🔍 Video aranıyor...';
+    vmTitle.textContent = '🔍 Arama Tamamlandı';
     vmCh.textContent = '';
+    iframe.style.display = 'none';
     iframe.src = '';
+    fallbackDiv.classList.remove('hidden');
+    
     try {
       const result = await geminiSuggestVideoSearch(state.currentClass, subjectName, topic);
-      iframe.src = result.embedSearch;
+      fallbackLink.href = result.searchUrl;
       vmTitle.textContent = `${subjectName} — ${topic}`;
-      vmCh.textContent = `🔍 "${result.query}" araması | `;
-      // YouTube arama linki ekle
-      const link = document.createElement('a');
-      link.href = result.searchUrl;
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.textContent = 'YouTube’da Aç ↗';
-      link.style.cssText = 'color:var(--accent-blue);font-size:0.82rem;text-decoration:underline;';
-      vmCh.appendChild(link);
+      vmCh.innerHTML = `🔍 <b>"${result.query}"</b> araması önerildi`;
     } catch {
-      const q = encodeURIComponent(`${state.currentClass} sınıf ${subjectName} ${topic} konu anlatımı`);
-      iframe.src = `https://www.youtube.com/embed?listType=search&list=${q}&rel=0`;
+      const fallbackQuery = `${state.currentClass} sınıf ${subjectName} ${topic} konu anlatımı`;
+      fallbackLink.href = `https://www.youtube.com/results?search_query=${encodeURIComponent(fallbackQuery)}`;
       vmTitle.textContent = `${subjectName} — ${topic}`;
-      vmCh.textContent = 'YouTube’da Arama';
+      vmCh.textContent = 'YouTube’da Arama Önerildi';
     }
   }
 

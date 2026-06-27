@@ -354,12 +354,18 @@
           <div id="video-player-section" class="hidden">
             <div class="video-back-btn" onclick="backToTopics()">← Konulara Dön</div>
             <h3 class="section-title" id="video-title">Konu Başlığı</h3>
-            <div class="video-embed-wrap">
+            <div class="video-embed-wrap" id="video-embed-wrap">
               <iframe id="youtube-iframe" 
                 src="" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 allowfullscreen>
               </iframe>
+              <div id="video-fallback" class="hidden" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,0.02);text-align:center;padding:2rem;">
+                <div style="font-size:3rem;margin-bottom:1rem">📺</div>
+                <h4 style="color:#f0f4ff;margin-bottom:0.5rem;font-size:1.1rem;">Bu konu için önerilen video hazırlanıyor</h4>
+                <p style="color:var(--text-secondary);font-size:0.85rem;max-width:80%;margin-bottom:1.5rem;line-height:1.5;">YouTube'un güvenlik kısıtlamaları nedeniyle arama sonuçlarını doğrudan burada oynatamıyoruz. Lütfen aşağıdaki butona tıklayarak senin için hazırladığımız YouTube aramasına git.</p>
+                <a id="youtube-fallback-link" href="#" target="_blank" rel="noopener" class="btn-primary" style="background:#ef4444;text-decoration:none;">▶️ YouTube'da İzle</a>
+              </div>
             </div>
             <div class="video-meta glass-card" id="video-meta">
               <div class="video-meta-title" id="vm-title"></div>
