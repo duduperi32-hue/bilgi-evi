@@ -35,7 +35,12 @@ const FirebaseDB = {
 
   // Tüm kullanıcıları dinle ve `app.js` tarafına ilet
   listenUsers(callback) {
-    if (!this.isConfigured) return; // Ayarlı değilse sessizce dön
+    if (!this.isConfigured) {
+      // Firebase yoksa yerel hafızadan yükle
+      const localUsers = JSON.parse(localStorage.getItem('bilgievi_local_users') || '[]');
+      callback(localUsers);
+      return;
+    }
     
     const usersRef = this.db.ref('users');
     usersRef.on('value', (snapshot) => {
@@ -44,13 +49,23 @@ const FirebaseDB = {
         // Object to Array
         const userList = Object.values(data);
         callback(userList);
+      } else {
+        callback([]);
       }
     });
   },
 
   // Bir kullanıcının profilini veya puanını güncelle/ekle
   saveUser(userObj) {
-    if (!this.isConfigured) return;
+    if (!this.isConfigured) {
+      // Firebase yoksa yerel hafızaya kaydet
+      const localUsers = JSON.parse(localStorage.getItem('bilgievi_local_users') || '[]');
+      const idx = localUsers.findIndex(u => u.email === userObj.email);
+      if (idx > -1) localUsers[idx] = userObj;
+      else localUsers.push(userObj);
+      localStorage.setItem('bilgievi_local_users', JSON.stringify(localUsers));
+      return;
+    }
     
     // E-posta adresini Firebase key olarak kullanmak için güvenli hale getiriyoruz
     // (Firebase anahtarları '.', '#', '$', '[', veya ']' içeremez)
