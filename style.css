@@ -1011,4 +1011,8 @@ body {
   .tests-tabs::-webkit-scrollbar, .profile-tabs::-webkit-scrollbar { display: none; }
   .modal-content { width: 95%; padding: 1.5rem; margin: 1rem auto; }
   .dashboard-grid, .classroom-grid, .test-options, .options-grid, .game-options, .stats-grid { grid-template-columns: 1fr; }
+  .login-container { grid-template-columns: 1fr !important; gap: 1rem; }
+  .login-right { margin-top: 1rem; }
+  .table-responsive, .league-table, .history-table { display: block; width: 100%; overflow-x: auto; white-space: nowrap; }
+  body { overflow-x: hidden; }
 }
