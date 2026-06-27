@@ -1085,7 +1085,7 @@ function renderSkillTree() {
           const cls = done ? 'completed' : locked ? 'locked' : 'unlocked';
           // Tırnak işaretlerini kaçırmak için basit replace
           const safeTopic = t.replace(/'/g, "\\'");
-          return \`<button class="skill-chip \${cls}" onclick="doFoundationTopic('\${subject}', \${gi}, \${ti}, '\${safeTopic}')">\${done?'✅ ':locked?'🔒 ':'▶ '}\${t}</button>\`;
+          return `<button class="skill-chip ${cls}" onclick="doFoundationTopic('${subject}', ${gi}, ${ti}, '${safeTopic}')">${done?'✅ ':locked?'🔒 ':'▶ '}${t}</button>`;
         }).join('')}
       </div>
     </div>`;
