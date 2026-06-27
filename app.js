@@ -762,6 +762,18 @@ function initLogin() {
     });
   });
   renderLeagueMiniLogin();
+  
+  // Otomatik Giriş Kontrolü
+  const saved = localStorage.getItem('bilgievi_user');
+  if (saved) {
+    try {
+      const { email, pass } = JSON.parse(saved);
+      if (email && pass) {
+        document.getElementById('login-email').value = email;
+        document.getElementById('login-password').value = pass;
+      }
+    } catch (e) { console.error('Oturum bilgisi bozuk.'); }
+  }
 }
 
 function renderLeagueMiniLogin() {
@@ -781,34 +793,64 @@ function renderLeagueMiniLogin() {
       <span class="mini-name">${u.name}</span>
       <span class="mini-pts">${u.points.toLocaleString('tr-TR')} pt</span>
     </div>`).join('');
-}
-
 function goToDashboard() {
-  if (!state.currentClass) { showToast('Lütfen önce sınıfını seç!', true); return; }
-  const nameVal = document.getElementById('login-email').value;
-  if (nameVal) {
-    const namePart = nameVal.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+  const emailVal = document.getElementById('login-email').value.trim();
+  const passVal = document.getElementById('login-password').value.trim();
+  
+  if (!emailVal || !passVal) { showToast('Lütfen e-posta ve şifreni gir!', true); return; }
+
+  const namePart = emailVal.split('@')[0].replace(/[._-]/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+  
+  const existing = state.registeredUsers.find(u => u.email === emailVal);
+  if (existing) {
+    // Şifre kontrolü (eski kayıtlılarda şifre yoksa ilk girileni kabul et)
+    if (existing.password && existing.password !== passVal) {
+      showToast('⚠️ Şifre hatalı!', true); return;
+    }
+    if (!existing.password) {
+      existing.password = passVal; // Eski kullanıcılara şifre ata
+      if (typeof FirebaseDB !== 'undefined') FirebaseDB.saveUser(existing);
+    }
+    
+    // Var olan kullanıcı ile giriş yap
+    state.profile.name = existing.name;
+    state.profile.email = existing.email;
+    state.profile.initials = existing.initials;
+    if (state.currentClass) {
+      existing.grade = state.currentClass;
+      if (typeof FirebaseDB !== 'undefined') FirebaseDB.saveUser(existing);
+    } else {
+      state.currentClass = existing.grade || '9';
+    }
+    if (existing.branch) state.selectedBranch = existing.branch;
+    if (existing.photo) state.profile.photo = existing.photo;
+  } else {
+    // Yeni Kullanıcı Kaydı
+    if (!state.currentClass) { showToast('Yeni kayıt için lütfen yukarıdan sınıfını seç!', true); return; }
+    
     state.profile.name = namePart;
-    state.profile.email = nameVal;
+    state.profile.email = emailVal;
     state.profile.initials = namePart.split(' ').map(w => w[0]||'').join('').toUpperCase().slice(0,2) || '??';
-  }
-  // Bu kullanıcıyı lig için kaydet
-  const existing = state.registeredUsers.find(u => u.email === state.profile.email);
-  if (!existing) {
+    
     const newUser = {
-      name: state.profile.name || 'Öğrenci',
+      name: state.profile.name,
       initials: state.profile.initials,
       email: state.profile.email,
+      password: passVal,
       grade: state.currentClass,
+      branch: state.selectedBranch || null,
       points: 0,
       badge: BADGES[0],
     };
     state.registeredUsers.push(newUser);
     if (typeof FirebaseDB !== 'undefined') FirebaseDB.saveUser(newUser);
-  } else {
-    existing.grade = state.currentClass;
-    if (typeof FirebaseDB !== 'undefined') FirebaseDB.saveUser(existing);
   }
+  
+  // Oturumu kaydet
+  localStorage.setItem('bilgievi_user', JSON.stringify({ email: emailVal, pass: passVal }));
+  showToast('Giriş başarılı! Hoş geldin ' + state.profile.name);
+
+  // Ekrana geçiş
   document.getElementById('screen-login').classList.remove('active');
   document.getElementById('screen-login').classList.add('hidden');
   document.getElementById('app-shell').classList.remove('hidden');
@@ -816,6 +858,7 @@ function goToDashboard() {
   document.getElementById('sidebar-name').textContent = state.profile.name || 'Öğrenci';
   document.getElementById('sidebar-class').textContent = state.currentClass + '. Sınıf';
   document.getElementById('sidebar-avatar').textContent = state.profile.initials;
+  
   navigate('dashboard');
   initDashboard();
   initLeague();
@@ -1149,6 +1192,14 @@ function initClassroom() {
   const subjectOpts = Object.keys(gradeSubjects).map(s => `<option value="${s}">${s}</option>`).join('');
   document.getElementById('plan-subject').innerHTML = '<option value="">Ders Seç</option>' + subjectOpts;
   renderPlanSchedule();
+  
+  if (state.selectedBranch) {
+    const bSelect = document.getElementById('vocational-branch');
+    if (bSelect) {
+      bSelect.value = state.selectedBranch;
+      onBranchChange();
+    }
+  }
 }
 
 function onBranchChange() {
@@ -1158,6 +1209,16 @@ function onBranchChange() {
   if (!val) { el.innerHTML = ''; return; }
   const branch = VOCATIONAL[val];
   if (!branch) return;
+  
+  // Hesaba Kaydet
+  if (state.profile.email) {
+    const existing = state.registeredUsers.find(u => u.email === state.profile.email);
+    if (existing) {
+      existing.branch = val;
+      if (typeof FirebaseDB !== 'undefined') FirebaseDB.saveUser(existing);
+    }
+  }
+
   const allCourses = [...branch.kulturDersleri, ...branch.meslekDersleri];
   document.getElementById('plan-subject').innerHTML = '<option value="">Ders Seç</option>' + allCourses.map(c => `<option value="${c}">${c}</option>`).join('');
   el.innerHTML = `<div class="section-label" style="margin-top:1rem">📚 Derslerim — ${branch.label}</div>` +
