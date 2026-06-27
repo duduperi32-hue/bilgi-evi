@@ -650,15 +650,15 @@ const VIDEO_DB = {
 // MESLEK LİSESİ BÖLÜM VERİSİ
 // ─────────────────────────────────────────
 const VOCATIONAL = {
-  anadolu:  { label:'Anadolu Lisesi',           kulturDersleri:['Matematik','Fizik','Kimya','Biyoloji','Türk Dili','İngilizce','Tarih','Coğrafya'], meslekDersleri:[] },
-  fen:      { label:'Fen Lisesi',                kulturDersleri:['Matematik','Fizik','Kimya','Biyoloji','İngilizce','Bilgisayar'],                  meslekDersleri:[] },
-  elektrik: { label:'Elektrik-Elektronik',       kulturDersleri:['Matematik','Fizik','Türk Dili','İngilizce'],                                      meslekDersleri:['Elektrik Devre Analizi','Elektronik','Elektrik Tesisatı','PLC Programlama','Otomasyon'] },
-  bilisim:  { label:'Bilişim Teknolojileri',     kulturDersleri:['Matematik','Türk Dili','İngilizce','Fizik'],                                      meslekDersleri:['Algoritmalar','Web Tasarımı','Veritabanı','Ağ Sistemleri','Programlama (Python)'] },
-  makine:   { label:'Makine Teknolojisi',        kulturDersleri:['Matematik','Fizik','Türk Dili','İngilizce'],                                      meslekDersleri:['Teknik Resim','CNC Tezgahları','Hidrolik & Pnömatik','Malzeme Bilgisi','Kaynak Teknolojisi'] },
-  insaat:   { label:'İnşaat Teknolojisi',        kulturDersleri:['Matematik','Fizik','Türk Dili','Coğrafya'],                                       meslekDersleri:['Yapı Bilgisi','Statik','Mimari Çizim','Zemin Mekaniği','İnşaat Uygulamaları'] },
-  saglik:   { label:'Sağlık Hizmetleri',         kulturDersleri:['Biyoloji','Kimya','Türk Dili','İngilizce'],                                      meslekDersleri:['Anatomi','Fizyoloji','Hasta Bakımı','Tıbbi Terminoloji','İlk Yardım'] },
-  mutfak:   { label:'Aşçılık & Gastronomi',      kulturDersleri:['Matematik','Türk Dili','İngilizce','Tarih'],                                      meslekDersleri:['Mutfak Tekniği','Pastane Ürünleri','Beslenme Bilimi','Mutfak Yönetimi','Dünya Mutfakları'] },
-  muhasebe: { label:'Muhasebe & Finans',          kulturDersleri:['Matematik','Türk Dili','İngilizce','Tarih'],                                      meslekDersleri:['Muhasebe Temelleri','Bilanço','Vergi Hukuku','Girişimcilik','Ekonomi'] },
+  anadolu:  { label:'Anadolu Lisesi',           kulturDersleri:['Matematik','Fizik','Kimya','Biyoloji','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü','Felsefe'], meslekDersleri:[] },
+  fen:      { label:'Fen Lisesi',                kulturDersleri:['Matematik','Fizik','Kimya','Biyoloji','Türk Dili','İngilizce','Tarih','Coğrafya','Bilgisayar'], meslekDersleri:[] },
+  elektrik: { label:'Elektrik-Elektronik',       kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Elektrik Devre Analizi','Elektronik','Elektrik Tesisatı','PLC Programlama','Otomasyon'] },
+  bilisim:  { label:'Bilişim Teknolojileri',     kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Algoritmalar','Web Tasarımı','Veritabanı','Ağ Sistemleri','Programlama (Python)'] },
+  makine:   { label:'Makine Teknolojisi',        kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Teknik Resim','CNC Tezgahları','Hidrolik & Pnömatik','Malzeme Bilgisi','Kaynak Teknolojisi'] },
+  insaat:   { label:'İnşaat Teknolojisi',        kulturDersleri:['Matematik','Fizik','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Yapı Bilgisi','Statik','Mimari Çizim','Zemin Mekaniği','İnşaat Uygulamaları'] },
+  saglik:   { label:'Sağlık Hizmetleri',         kulturDersleri:['Matematik','Biyoloji','Kimya','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Anatomi','Fizyoloji','Hasta Bakımı','Tıbbi Terminoloji','İlk Yardım'] },
+  mutfak:   { label:'Aşçılık & Gastronomi',      kulturDersleri:['Matematik','Biyoloji','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Mutfak Tekniği','Pastane Ürünleri','Beslenme Bilimi','Mutfak Yönetimi','Dünya Mutfakları'] },
+  muhasebe: { label:'Muhasebe & Finans',         kulturDersleri:['Matematik','Türk Dili','İngilizce','Tarih','Coğrafya','Din Kültürü'], meslekDersleri:['Muhasebe Temelleri','Bilanço','Vergi Hukuku','Girişimcilik','Ekonomi'] },
 };
 
 const FOUNDATION_GRADES = [
@@ -1001,6 +1001,10 @@ function switchProfileTab(tab, btn) {
 }
 
 function renderVirtualClass() {
+  const titleEl = document.getElementById('virtual-class-title');
+  if (titleEl && state.currentClass) {
+    titleEl.textContent = `👥 ${state.currentClass}. Sınıf Sanal Sınıfı`;
+  }
   const el = document.getElementById('virtual-class-list');
   const classmates = state.registeredUsers
     .filter(u => u.grade === state.currentClass && u.email !== state.profile.email)
