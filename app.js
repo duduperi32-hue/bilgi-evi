@@ -1047,11 +1047,35 @@ function addNote() { document.getElementById('note-editor').focus(); }
 
 // Skill Tree
 function renderSkillTree() {
+  const subjectEl = document.getElementById('foundation-subject');
+  if (!subjectEl) return;
+  const subject = subjectEl.value;
   const el = document.getElementById('skill-tree');
-  el.innerHTML = FOUNDATION_GRADES.map((g, gi) => {
-    const prog = state.foundationProgress.find(p => p.grade === g.grade);
+  
+  const grades = ['9', '10', '11', '12'];
+  const treeData = grades.map(grade => ({
+    grade: grade + '. Sınıf',
+    topics: GRADE_SUBJECTS[grade] && GRADE_SUBJECTS[grade][subject] ? GRADE_SUBJECTS[grade][subject] : []
+  })).filter(g => g.topics.length > 0);
+
+  if (treeData.length === 0) {
+    el.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">Bu ders için konu bulunamadı.</p>';
+    return;
+  }
+
+  el.innerHTML = treeData.map((g, gi) => {
+    const progKey = `${subject}-${g.grade}`;
+    const prog = state.foundationProgress.find(p => p.grade === progKey);
     const completed = prog ? prog.completed : [];
-    const prevDone = gi === 0 || (state.foundationProgress.find(p => p.grade === FOUNDATION_GRADES[gi-1].grade)?.completed.length >= FOUNDATION_GRADES[gi-1].topics.length);
+    
+    let prevDone = true;
+    if (gi > 0) {
+        const prevProgKey = `${subject}-${treeData[gi-1].grade}`;
+        const prevProg = state.foundationProgress.find(p => p.grade === prevProgKey);
+        const prevTopicsCount = treeData[gi-1].topics.length;
+        prevDone = prevProg && prevProg.completed.length >= prevTopicsCount;
+    }
+
     return `<div class="skill-grade">
       <span class="skill-grade-label">${g.grade}</span>
       <div class="skill-chips">
@@ -1059,17 +1083,44 @@ function renderSkillTree() {
           const done = completed.includes(ti);
           const locked = !prevDone || (!done && ti > 0 && !completed.includes(ti-1));
           const cls = done ? 'completed' : locked ? 'locked' : 'unlocked';
-          return `<button class="skill-chip ${cls}" onclick="doFoundationTopic(${gi},${ti},'${t}')">${done?'✅ ':locked?'🔒 ':'▶ '}${t}</button>`;
+          // Tırnak işaretlerini kaçırmak için basit replace
+          const safeTopic = t.replace(/'/g, "\\'");
+          return \`<button class="skill-chip \${cls}" onclick="doFoundationTopic('\${subject}', \${gi}, \${ti}, '\${safeTopic}')">\${done?'✅ ':locked?'🔒 ':'▶ '}\${t}</button>\`;
         }).join('')}
       </div>
     </div>`;
   }).join('');
 }
-function doFoundationTopic(gi, ti, topic) {
-  const g = FOUNDATION_GRADES[gi];
-  let prog = state.foundationProgress.find(p => p.grade === g.grade);
-  if (!prog) { prog = { grade: g.grade, completed: [] }; state.foundationProgress.push(prog); }
-  if (!prog.completed.includes(ti)) { prog.completed.push(ti); showToast(`${topic} tamamlandı! 🎉`); }
+
+function doFoundationTopic(subject, gi, ti, topic) {
+  const grades = ['9', '10', '11', '12'];
+  const treeData = grades.map(grade => ({
+    grade: grade + '. Sınıf',
+    topics: GRADE_SUBJECTS[grade] && GRADE_SUBJECTS[grade][subject] ? GRADE_SUBJECTS[grade][subject] : []
+  })).filter(g => g.topics.length > 0);
+
+  const g = treeData[gi];
+  const progKey = `${subject}-${g.grade}`;
+
+  let prog = state.foundationProgress.find(p => p.grade === progKey);
+  if (!prog) { prog = { grade: progKey, completed: [] }; state.foundationProgress.push(prog); }
+  
+  if (!prog.completed.includes(ti)) { 
+      prog.completed.push(ti); 
+      showToast(`${subject} — ${topic} tamamlandı! 🎉`); 
+      
+      // Kurucu rozeti kontrolü
+      const allDone = treeData.every((td) => {
+         const pk = `${subject}-${td.grade}`;
+         const pr = state.foundationProgress.find(p => p.grade === pk);
+         return pr && pr.completed.length >= td.topics.length;
+      });
+      if (allDone && !state.earnedBadges.includes('founder')) {
+         state.earnedBadges.push('founder');
+         showToast('🏗️ Kurucu rozeti kazandın!');
+         renderBadgeShowcase();
+      }
+  }
   renderSkillTree();
 }
 

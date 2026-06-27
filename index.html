@@ -273,7 +273,19 @@
       <div id="profile-tab-foundation" class="profile-tab-content hidden">
         <div class="glass-card foundation-card">
           <h3 class="section-title">🏗️ Hadi Çalışalım — Temel Atma Modülü</h3>
-          <p class="section-desc">5. sınıftan başlayarak lise konularının temelini sırasıyla pekiştir.</p>
+          <p class="section-desc">Seçtiğin dersin 9'dan 12. sınıfa kadar tüm konularını sırasıyla pekiştir.</p>
+          <div class="form-group" style="max-width: 300px; margin: 1rem 0 1.5rem;">
+            <select id="foundation-subject" class="form-input" onchange="renderSkillTree()">
+              <option value="Matematik">Matematik</option>
+              <option value="Fizik">Fizik</option>
+              <option value="Kimya">Kimya</option>
+              <option value="Biyoloji">Biyoloji</option>
+              <option value="Tarih">Tarih</option>
+              <option value="Coğrafya">Coğrafya</option>
+              <option value="Türk Dili">Türk Dili</option>
+              <option value="İngilizce">İngilizce</option>
+            </select>
+          </div>
           <div class="skill-tree" id="skill-tree"></div>
         </div>
       </div>
