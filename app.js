@@ -928,10 +928,14 @@ function renderBadgeShowcase() {
 // PROFİL
 // ─────────────────────────────────────────
 function initProfile() {
-  document.getElementById('profile-name').value = state.profile.name;
-  document.getElementById('profile-school').value = state.profile.school;
-  document.getElementById('profile-schoolno').value = state.profile.schoolNo;
-  document.getElementById('profile-email').value = state.profile.email;
+  document.getElementById('profile-name').value = state.profile.name || '';
+  document.getElementById('profile-school').value = state.profile.school || '';
+  document.getElementById('profile-schoolno').value = state.profile.schoolNo || '';
+  document.getElementById('profile-email').value = state.profile.email || '';
+  const deptEl = document.getElementById('profile-department');
+  if (deptEl) {
+    deptEl.value = state.selectedBranch && VOCATIONAL[state.selectedBranch] ? VOCATIONAL[state.selectedBranch].label : "Henüz Seçilmedi";
+  }
   updateProfileAvatar();
   renderVirtualClass();
   renderNotes();
